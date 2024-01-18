@@ -1,12 +1,22 @@
 package main
 
 import (
-	"github.com/rivo/tview"
+	"fmt"
+
+	"github.com/c-bata/go-prompt"
 )
 
-func main() {
-	box := tview.NewBox().SetBorder(true).SetTitle("Hello, world!")
-	if err := tview.NewApplication().SetRoot(box, true).Run(); err != nil {
-		panic(err)
+func completer(d prompt.Document) []prompt.Suggest {
+	s := []prompt.Suggest{
+		{Text: "users", Description: "Store the username and age"},
+		{Text: "articles", Description: "Store the article text posted by user"},
+		{Text: "comments", Description: "Store the text commented to articles"},
 	}
+	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
+}
+
+func main() {
+	fmt.Println("Please select table.")
+	t := prompt.Input("> ", completer)
+	fmt.Println("You selected " + t)
 }
